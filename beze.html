@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Безе — Искусство воздушного сладости</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#FDFCF8',
+            savor: '#F3EFE0',
+          },
+          borderRadius: {
+            '4xl': '2rem',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fafaf9; color: #1c1917; overflow-x: hidden; }
+    .font-serif { font-family: 'Playfair Display', serif; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #fafaf9; }
+    ::-webkit-scrollbar-thumb { background: #a8a29e; border-radius: 3px; }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(24px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+    .reveal.delay-1 { transition-delay: 100ms; }
+    .reveal.delay-2 { transition-delay: 200ms; }
+    .reveal.delay-3 { transition-delay: 300ms; }
+    .reveal.delay-4 { transition-delay: 400ms; }
+    .reveal.delay-5 { transition-delay: 500ms; }
+
+    /* Hero parallax */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+    @keyframes floatMedium {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(-1.5deg); }
+    }
+    .float-slow { animation: floatSlow 6s ease-in-out infinite; }
+    .float-medium { animation: floatMedium 5s ease-in-out infinite; }
+
+    /* Glass card */
+    .glass-card {
+      background: rgba(28, 25, 23, 0.4);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      background: rgba(28, 25, 23, 0.6);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+    }
+
+    /* Light card */
+    .light-card {
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: all 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .light-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.12);
+    }
+
+    /* Image hover */
+    .img-zoom {
+      overflow: hidden;
+      border-radius: 2rem;
+    }
+    .img-zoom img {
+      transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .img-zoom:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Divider */
+    .elegant-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .elegant-divider::before,
+    .elegant-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #a8a29e, transparent);
+    }
+
+    /* Timeline */
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, #a8a29e, transparent);
+      transform: translateX(-50%);
+    }
+    @media (max-width: 767px) {
+      .timeline-line { left: 1.5rem; }
+    }
+
+    /* Horizontal scroll for types */
+    .types-scroll::-webkit-scrollbar { height: 4px; }
+    .types-scroll::-webkit-scrollbar-thumb { background: #a8a29e; border-radius: 2px; }
+
+    /* Ticker */
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-track { animation: ticker 30s linear infinite; }
+
+    /* Number counter style */
+    .stat-number {
+      background: linear-gradient(135deg, #1c1917, #78716c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Nav blur */
+    .nav-blur {
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 h-20 nav-blur bg-stone-50/80 border-b border-stone-200/50">
+    <div class="max-w-screen-2xl mx-auto h-full px-6 flex items-center justify-between">
+      <a href="#" class="font-serif text-2xl font-medium tracking-tight text-stone-900">
+        Безе<span class="text-stone-400">.</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#origin" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Происхождение</a>
+        <a href="#types" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Виды</a>
+        <a href="#process" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Процесс</a>
+        <a href="#desserts" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Десерты</a>
+        <a href="#facts" class="text-sm font-medium text-stone-500 hover:text-stone-900 transition-colors">Факты</a>
+      </div>
+      <button id="menuBtn" class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-stone-100">
+        <span class="iconify text-xl text-stone-700" data-icon="lucide:menu"></span>
+      </button>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="md:hidden absolute top-20 left-0 right-0 bg-white/95 nav-blur border-b border-stone-200/50 opacity-0 -translate-y-4 pointer-events-none transition-all duration-400" style="transition: all 0.4s cubic-bezier(0.16,1,0.3,1);">
+      <div class="px-6 py-6 flex flex-col gap-4">
+        <a href="#origin" class="text-sm font-medium text-stone-600 py-2">Происхождение</a>
+        <a href="#types" class="text-sm font-medium text-stone-600 py-2">Виды</a>
+        <a href="#process" class="text-sm font-medium text-stone-600 py-2">Процесс</a>
+        <a href="#desserts" class="text-sm font-medium text-stone-600 py-2">Десерты</a>
+        <a href="#facts" class="text-sm font-medium text-stone-600 py-2">Факты</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative h-[90vh] flex items-center justify-center overflow-hidden rounded-b-[3rem]">
+    <div class="absolute inset-0">
+      <img src="https://picsum.photos/seed/meringue-hero-pink/1920/1080.jpg" alt="Безе" class="w-full h-full object-cover scale-105" style="animation: pulse 15s ease-in-out infinite;">
+      <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.15), rgba(0,0,0,0.7));"></div>
+    </div>
+
+    <!-- Floating decorative elements -->
+    <div class="absolute top-32 left-[10%] w-20 h-20 rounded-full bg-white/10 float-slow hidden md:block"></div>
+    <div class="absolute bottom-40 right-[15%] w-32 h-32 rounded-full bg-white/5 float-medium hidden md:block"></div>
+    <div class="absolute top-1/3 right-[10%] w-12 h-12 rounded-full bg-white/10 float-medium hidden md:block" style="animation-delay: 1s;"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-5xl">
+      <div class="reveal">
+        <p class="text-xs font-bold uppercase tracking-[0.3em] text-white/60 mb-6">Искусство воздушной сладости</p>
+      </div>
+      <h1 class="reveal delay-1 font-serif text-5xl md:text-8xl font-normal text-white leading-[0.85] tracking-tighter mb-8">
+        Безе
+      </h1>
+      <p class="reveal delay-2 text-lg md:text-xl font-light text-white/70 max-w-2xl mx-auto leading-relaxed mb-10">
+        Хрустящее снаружи, тающее внутри — десерт, рождённый из ничего, кроме яичного белка и сахара
+      </p>
+      <div class="reveal delay-3 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#origin" class="inline-flex items-center justify-center gap-2 bg-white text-stone-900 text-sm font-bold uppercase tracking-wide px-8 py-4 rounded-full hover:scale-105 transition-transform duration-150">
+          Узнать больше
+          <span class="iconify text-base" data-icon="lucide:arrow-down"></span>
+        </a>
+        <a href="#types" class="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white border border-white/20 text-sm font-bold uppercase tracking-wide px-8 py-4 rounded-full hover:bg-white/20 transition-all duration-150">
+          Виды безе
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+      <div class="w-6 h-10 rounded-full border-2 border-white/30 flex justify-center pt-2">
+        <div class="w-1.5 h-3 bg-white/60 rounded-full" style="animation: pulse 2s ease-in-out infinite;"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ticker / Ingredient strip -->
+  <section class="py-6 bg-savor overflow-hidden">
+    <div class="ticker-track flex items-center gap-12 whitespace-nowrap" style="width: max-content;">
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:egg"></span> Яичные белки</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:candy"></span> Сахар</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:thermometer"></span> Терпение</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:wind"></span> Воздух</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:flame"></span> Духовка 90°С</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:clock"></span> 2 часа</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:heart"></span> Любовь</span>
+      <span class="text-stone-300">✦</span>
+      <!-- Duplicate for seamless loop -->
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:egg"></span> Яичные белки</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:candy"></span> Сахар</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:thermometer"></span> Терпение</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:wind"></span> Воздух</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:flame"></span> Духовка 90°С</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:clock"></span> 2 часа</span>
+      <span class="text-stone-300">✦</span>
+      <span class="text-sm font-medium text-stone-400 flex items-center gap-3"><span class="iconify text-lg" data-icon="lucide:heart"></span> Любовь</span>
+      <span class="text-stone-300">✦</span>
+    </div>
+  </section>
+
+  <!-- Origin Section -->
+  <section id="origin" class="py-32 px-6">
+    <div class="max-w-screen-xl mx-auto">
+      <!-- Section header -->
+      <div class="text-center mb-20">
+        <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">История</p>
+        <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-stone-900 mb-6">
+          Происхождение<br><em class="text-stone-400">безе</em>
+        </h2>
+        <p class="reveal delay-2 text-lg font-light text-stone-500 max-w-2xl mx-auto leading-relaxed">
+          История десерта, покорившего королевские дворцы и простые кафе по всему миру
+        </p>
+      </div>
+
+      <!-- Story block -->
+      <div class="grid md:grid-cols-2 gap-16 md:gap-20 items-center mb-24">
+        <div class="reveal">
+          <div class="img-zoom">
+            <img src="https://picsum.photos/seed/swiss-village-old/800/600.jpg" alt="Швейцарская деревня" class="w-full aspect-[4/3] object-cover">
+          </div>
+        </div>
+        <div>
+          <div class="reveal delay-1">
+            <span class="inline-block text-xs font-bold uppercase tracking-[0.3em] text-green-500 bg-green-500/10 px-4 py-2 rounded-full mb-6">Швейцария, XVIII век</span>
+          </div>
+          <h3 class="reveal delay-2 font-serif text-3xl md:text-4xl font-normal leading-tight tracking-tight mb-6">
+            Легенда о<br>Гаспарини
+          </h3>
+          <p class="reveal delay-3 text-lg font-light text-stone-500 leading-relaxed mb-6">
+            Согласно самой распространённой легенде, безе было изобретено в 1720 году швейцарским кондитером <strong class="text-stone-700 font-medium">Гаспарини</strong> в маленьком городке Мейринген в кантоне Берн. Название «меринга» якобы происходит именно от этого места.
+          </p>
+          <p class="reveal delay-4 text-lg font-light text-stone-500 leading-relaxed">
+            Однако историки отмечают, что похожие рецепты встречались и раньше — ещё в трудах английского повара <strong class="text-stone-700 font-medium">Франсуа Массиало</strong> 1692 года описывается нечто похожее на безе.
+          </p>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="relative max-w-4xl mx-auto">
+        <div class="timeline-line hidden md:block"></div>
+
+        <!-- Event 1 -->
+        <div class="reveal relative md:grid md:grid-cols-2 gap-12 mb-16 md:mb-20">
+          <div class="md:text-right md:pr-16">
+            <span class="text-3xl font-serif text-stone-300">1692</span>
+            <h4 class="font-serif text-xl font-medium mt-2 mb-3">Первое упоминание</h4>
+            <p class="text-stone-500 font-light leading-relaxed">Франсуа Массиало публикует рецепт «белкового печенья» в своей книге — первое задокументированное упоминание прообраза безе.</p>
+          </div>
+          <div class="hidden md:flex items-center">
+            <div class="w-4 h-4 rounded-full bg-savor border-2 border-stone-300 absolute left-1/2 -translate-x-1/2"></div>
+          </div>
+        </div>
+
+        <!-- Event 2 -->
+        <div class="reveal delay-1 relative md:grid md:grid-cols-2 gap-12 mb-16 md:mb-20">
+          <div class="hidden md:block"></div>
+          <div class="md:pl-16">
+            <div class="w-4 h-4 rounded-full bg-savor border-2 border-stone-300 absolute left-1/2 -translate-x-1/2 hidden md:block"></div>
+            <span class="text-3xl font-serif text-stone-300">1720</span>
+            <h4 class="font-serif text-xl font-medium mt-2 mb-3">Рождение безе</h4>
+            <p class="text-stone-500 font-light leading-relaxed">Гаспарини в Мейрингене (Швейцария) совершенствует рецепт и создаёт классическое безе в его современном понимании.</p>
+          </div>
+        </div>
+
+        <!-- Event 3 -->
+        <div class="reveal delay-2 relative md:grid md:grid-cols-2 gap-12 mb-16 md:mb-20">
+          <div class="md:text-right md:pr-16">
+            <div class="w-4 h-4 rounded-full bg-savor border-2 border-stone-300 absolute left-1/2 -translate-x-1/2 hidden md:block"></div>
+            <span class="text-3xl font-serif text-stone-300">1740-е</span>
+            <h4 class="font-serif text-xl font-medium mt-2 mb-3">Двор Луи XV</h4>
+            <p class="text-stone-500 font-light leading-relaxed">Безе попадает во Францию и становится фаворитом Версаля. Повар Луи XV подаёт его королю, и десерт мгновенно завоевывает аристократию.</p>
+          </div>
+          <div class="hidden md:block"></div>
+        </div>
+
+        <!-- Event 4 -->
+        <div class="reveal delay-3 relative md:grid md:grid-cols-2 gap-12">
+          <div class="hidden md:block"></div>
+          <div class="md:pl-16">
+            <div class="w-4 h-4 rounded-full bg-savor border-2 border-stone-300 absolute left-1/2 -translate-x-1/2 hidden md:block"></div>
+            <span class="text-3xl font-serif text-stone-300">XIX–XX</span>
+            <h4 class="font-serif text-xl font-medium mt-2 mb-3">Мировое триумф</h4>
+            <p class="text-stone-500 font-light leading-relaxed">Безе путешествует по миру: Павлова — в Австралии и Новой Зеландии, макарон — во Франции, безешки — в России. Десерт становится универсальным.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quote Section -->
+  <section class="py-24 px-6 bg-stone-900 rounded-t-[3rem]" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.03);">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="reveal">
+        <span class="iconify text-4xl text-white/20 mb-8 inline-block" data-icon="lucide:quote"></span>
+      </div>
+      <blockquote class="reveal delay-1 font-serif text-2xl md:text-4xl font-normal text-white/90 leading-snug tracking-tight mb-8">
+        «Безе — это кулинарная иллюзия: из двух простейших ингредиентов рождается нечто совершенно волшебное»
+      </blockquote>
+      <p class="reveal delay-2 text-sm font-bold uppercase tracking-[0.3em] text-white/40">
+        Жак Пепен — французский повар
+      </p>
+    </div>
+  </section>
+
+  <!-- Types Section -->
+  <section id="types" class="py-32 px-6 bg-stone-900 rounded-b-[3rem]" style="box-shadow: 0 10px 40px rgba(0,0,0,0.03);">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="text-center mb-20">
+        <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-500 mb-4">Классификация</p>
+        <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-cream mb-6">
+          Три вида<br><em class="text-stone-500">безе</em>
+        </h2>
+        <p class="reveal delay-2 text-lg font-light text-stone-500 max-w-2xl mx-auto leading-relaxed">
+          Каждый метод приготовления придаёт безе уникальную текстуру и характер
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 md:gap-8">
+        <!-- French -->
+        <div class="reveal glass-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/french-meringue-white/600/500.jpg" alt="Французское безе" class="w-full aspect-[4/3] object-cover">
+          </div>
+          <div class="px-3 pb-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <span class="iconify text-lg text-white/70" data-icon="lucide:wind"></span>
+              </div>
+              <div>
+                <h3 class="font-serif text-xl font-medium text-cream">Французское</h3>
+                <p class="text-xs text-stone-500">Meringue française</p>
+              </div>
+            </div>
+            <p class="text-stone-400 font-light text-sm leading-relaxed mb-4">
+              Самый простой метод: белки взбиваются с сахаром без нагревания. Лёгкое, пористое, слегка хрупкое.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Простой</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Хрупкое</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Воздушное</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Swiss -->
+        <div class="reveal delay-1 glass-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/swiss-meringue-pastry/600/500.jpg" alt="Швейцарское безе" class="w-full aspect-[4/3] object-cover">
+          </div>
+          <div class="px-3 pb-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <span class="iconify text-lg text-white/70" data-icon="lucide:thermometer"></span>
+              </div>
+              <div>
+                <h3 class="font-serif text-xl font-medium text-cream">Швейцарское</h3>
+                <p class="text-xs text-stone-500">Meringue suisse</p>
+              </div>
+            </div>
+            <p class="text-stone-400 font-light text-sm leading-relaxed mb-4">
+              Белки с сахаром нагреваются на водяной бане до 50-60°C, затем взбиваются. Плотное, глянцевое, стабильное.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Плотное</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Глянцевое</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Стабильное</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Italian -->
+        <div class="reveal delay-2 glass-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/italian-meringue-cake/600/500.jpg" alt="Итальянское безе" class="w-full aspect-[4/3] object-cover">
+          </div>
+          <div class="px-3 pb-4">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <span class="iconify text-lg text-white/70" data-icon="lucide:flame"></span>
+              </div>
+              <div>
+                <h3 class="font-serif text-xl font-medium text-cream">Итальянское</h3>
+                <p class="text-xs text-stone-500">Meringue italienne</p>
+              </div>
+            </div>
+            <p class="text-stone-400 font-light text-sm leading-relaxed mb-4">
+              Горячий сахарный сироп (118°C) вливается во взбиваемые белки. Самое стабильное, шелковистое, безопасное.
+            </p>
+            <div class="flex flex-wrap gap-2">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Шёлковое</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Безопасное</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-white/50 bg-white/5 px-3 py-1 rounded-full">Сложное</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="reveal delay-3 mt-16 glass-card rounded-3xl p-8 overflow-x-auto">
+        <h4 class="font-serif text-lg text-cream mb-6 text-center">Сравнение методов</h4>
+        <table class="w-full text-sm text-left min-w-[500px]">
+          <thead>
+            <tr class="border-b border-white/10">
+              <th class="py-3 text-stone-500 font-medium">Параметр</th>
+              <th class="py-3 text-stone-400 font-medium text-center">Французское</th>
+              <th class="py-3 text-stone-400 font-medium text-center">Швейцарское</th>
+              <th class="py-3 text-stone-400 font-medium text-center">Итальянское</th>
+            </tr>
+          </thead>
+          <tbody class="text-stone-400 font-light">
+            <tr class="border-b border-white/5">
+              <td class="py-3 text-stone-500">Температура</td>
+              <td class="py-3 text-center">Комнатная</td>
+              <td class="py-3 text-center">50–60°C</td>
+              <td class="py-3 text-center">118°C (сироп)</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="py-3 text-stone-500">Текстура</td>
+              <td class="py-3 text-center">Пористая</td>
+              <td class="py-3 text-center">Плотная</td>
+              <td class="py-3 text-center">Шёлковая</td>
+            </tr>
+            <tr class="border-b border-white/5">
+              <td class="py-3 text-stone-500">Сложность</td>
+              <td class="py-3 text-center">⭐</td>
+              <td class="py-3 text-center">⭐⭐</td>
+              <td class="py-3 text-center">⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td class="py-3 text-stone-500">Идеально для</td>
+              <td class="py-3 text-center">Печенье, основы</td>
+              <td class="py-3 text-center">Пирожные, декор</td>
+              <td class="py-3 text-center">Крем, безе-мусс</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section id="process" class="py-32 px-6">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-16 md:gap-20 items-center">
+        <div>
+          <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">Мастер-класс</p>
+          <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-stone-900 mb-8">
+            Как сделать<br><em class="text-stone-400">идеальное</em><br>безе
+          </h2>
+          <p class="reveal delay-2 text-lg font-light text-stone-500 leading-relaxed mb-10">
+            Секрет кроется не в ингредиентах — их всего два. Секрет в технике, терпении и внимании к деталям.
+          </p>
+
+          <!-- Steps -->
+          <div class="space-y-6">
+            <div class="reveal delay-2 flex gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-savor flex items-center justify-center">
+                <span class="font-serif text-xl text-stone-600">1</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-stone-900 mb-1">Подготовка белков</h4>
+                <p class="text-sm text-stone-500 font-light leading-relaxed">Отделите белки от желтков. Важно: ни капли желтка! Дайте им постоять 30 мин при комнатной температуре.</p>
+              </div>
+            </div>
+            <div class="reveal delay-3 flex gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-savor flex items-center justify-center">
+                <span class="font-serif text-xl text-stone-600">2</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-stone-900 mb-1">Начало взбивания</h4>
+                <p class="text-sm text-stone-500 font-light leading-relaxed">Взбивайте на средней скорости до мягких пиков. Чистая, сухая посуда — обязательное условие.</p>
+              </div>
+            </div>
+            <div class="reveal delay-4 flex gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-savor flex items-center justify-center">
+                <span class="font-serif text-xl text-stone-600">3</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-stone-900 mb-1">Постепенное добавление сахара</h4>
+                <p class="text-sm text-stone-500 font-light leading-relaxed">Добавляйте сахар по ложке, продолжая взбивать. Пропорция: 50–60 г сахара на 1 белок.</p>
+              </div>
+            </div>
+            <div class="reveal delay-5 flex gap-5">
+              <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-savor flex items-center justify-center">
+                <span class="font-serif text-xl text-stone-600">4</span>
+              </div>
+              <div>
+                <h4 class="font-medium text-stone-900 mb-1">Сушка в духовке</h4>
+                <p class="text-sm text-stone-500 font-light leading-relaxed">90–100°C на 1,5–2 часа. Безе не запекается — оно сушится. Выключите духовку и оставьте остывать внутри.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal delay-1">
+          <div class="sticky top-28">
+            <div class="img-zoom rounded-3xl mb-6">
+              <img src="https://picsum.photos/seed/whisking-egg-whites-fluffy/800/1000.jpg" alt="Взбивание белков" class="w-full aspect-[3/4] object-cover">
+            </div>
+            <div class="bg-savor rounded-2xl p-6 flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center flex-shrink-0">
+                <span class="iconify text-lg text-stone-600" data-icon="lucide:lightbulb"></span>
+              </div>
+              <div>
+                <h4 class="font-medium text-sm text-stone-900 mb-1">Совет шефа</h4>
+                <p class="text-sm text-stone-500 font-light leading-relaxed">Если сомневаетесь в чистоте белков — добавьте щепотку лимонной кислоты или пару капель сока лимона. Это также стабилизирует пену.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-24 px-6 bg-savor rounded-t-[3rem]">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div class="reveal text-center">
+          <p class="stat-number font-serif text-4xl md:text-5xl font-normal">2</p>
+          <p class="text-sm text-stone-500 font-light mt-2">ингредиента</p>
+        </div>
+        <div class="reveal delay-1 text-center">
+          <p class="stat-number font-serif text-4xl md:text-5xl font-normal">300+</p>
+          <p class="text-sm text-stone-500 font-light mt-2">лет истории</p>
+        </div>
+        <div class="reveal delay-2 text-center">
+          <p class="stat-number font-serif text-4xl md:text-5xl font-normal">3</p>
+          <p class="text-sm text-stone-500 font-light mt-2">вида безе</p>
+        </div>
+        <div class="reveal delay-3 text-center">
+          <p class="stat-number font-serif text-4xl md:text-5xl font-normal">∞</p>
+          <p class="text-sm text-stone-500 font-light mt-2">вариаций форм</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Famous Desserts Section -->
+  <section id="desserts" class="py-32 px-6 bg-savor rounded-b-[3rem]" style="box-shadow: 0 10px 40px rgba(0,0,0,0.03);">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="text-center mb-20">
+        <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">Всемирная слава</p>
+        <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-stone-900 mb-6">
+          Десерты на основе<br><em class="text-stone-400">безе</em>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+        <!-- Pavlova -->
+        <div class="reveal light-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/pavlova-berry-dessert/800/500.jpg" alt="Павлова" class="w-full aspect-[16/10] object-cover">
+          </div>
+          <div class="px-3 pb-3">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="font-serif text-2xl font-medium">Павлова</h3>
+                <p class="text-xs text-stone-400">Австралия / Новая Зеландия</p>
+              </div>
+              <span class="iconify text-2xl text-stone-300 group-hover:rotate-12 transition-transform duration-500" data-icon="lucide:cherry"></span>
+            </div>
+            <p class="text-stone-500 font-light text-sm leading-relaxed">
+              Большая безешка с хрустящей корочкой и мягкой серединкой, покрытая взбитыми сливками и свежими ягодами. Названа в честь балерины Анны Павловой во время её турне 1926 года.
+            </p>
+          </div>
+        </div>
+
+        <!-- Eton Mess -->
+        <div class="reveal delay-1 light-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/eton-mess-cream-strawberry/800/500.jpg" alt="Итонский беспорядок" class="w-full aspect-[16/10] object-cover">
+          </div>
+          <div class="px-3 pb-3">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="font-serif text-2xl font-medium">Итонский беспорядок</h3>
+                <p class="text-xs text-stone-400">Англия</p>
+              </div>
+              <span class="iconify text-2xl text-stone-300 group-hover:rotate-12 transition-transform duration-500" data-icon="lucide:ice-cream-cone"></span>
+            </div>
+            <p class="text-stone-500 font-light text-sm leading-relaxed">
+              Хаотичная смесь измельчённого безе, взбитых сливок и клубники. Традиционный десерт крикетного матча в Итоне — небрежность здесь является философией.
+            </p>
+          </div>
+        </div>
+
+        <!-- Baked Alaska -->
+        <div class="reveal delay-2 light-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/baked-alaska-flaming/800/500.jpg" alt="Аляска запечённая" class="w-full aspect-[16/10] object-cover">
+          </div>
+          <div class="px-3 pb-3">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="font-serif text-2xl font-medium">Запечённая Аляска</h3>
+                <p class="text-xs text-stone-400">США / Франция</p>
+              </div>
+              <span class="iconify text-2xl text-stone-300 group-hover:rotate-12 transition-transform duration-500" data-icon="lucide:flame"></span>
+            </div>
+            <p class="text-stone-500 font-light text-sm leading-relaxed">
+              Мороженое на бисквитной основе, покрытое слоем безе и быстро запечённое. Безе работает как теплоизолятор — мороженое внутри не тает!
+            </p>
+          </div>
+        </div>
+
+        <!-- Macaron -->
+        <div class="reveal delay-3 light-card rounded-3xl p-3 group">
+          <div class="img-zoom rounded-2xl mb-4">
+            <img src="https://picsum.photos/seed/macarons-colorful-pastel/800/500.jpg" alt="Макарон" class="w-full aspect-[16/10] object-cover">
+          </div>
+          <div class="px-3 pb-3">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="font-serif text-2xl font-medium">Макарон</h3>
+                <p class="text-xs text-stone-400">Франция</p>
+              </div>
+              <span class="iconify text-2xl text-stone-300 group-hover:rotate-12 transition-transform duration-500" data-icon="lucide:cookie"></span>
+            </div>
+            <p class="text-stone-500 font-light text-sm leading-relaxed">
+              Маленькие сэндвичи из безе с миндальной мукой. Хрустящая оболочка, мягкая «юбка» и нежная начинка — ганаш, крем или джем. Символ французской кондитерской культуры.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fun Facts Section -->
+  <section id="facts" class="py-32 px-6">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-16 md:gap-20 items-start">
+        <div>
+          <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-400 mb-4">Интересное</p>
+          <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-stone-900 mb-8">
+            Факты о<br><em class="text-stone-400">безе</em>
+          </h2>
+          <div class="reveal delay-2 img-zoom rounded-3xl">
+            <img src="https://picsum.photos/seed/pastel-meringue-closeup/800/600.jpg" alt="Безе крупным планом" class="w-full aspect-[4/3] object-cover">
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Fact 1 -->
+          <div class="reveal light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-green-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-green-500" data-icon="lucide:leaf"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Без глютена</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">Классическое безе не содержит муки и полностью подходит для людей с целиакией и непереносимостью глютена.</p>
+            </div>
+          </div>
+
+          <!-- Fact 2 -->
+          <div class="reveal delay-1 light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-blue-500" data-icon="lucide:scale"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Практически 0 калорий?</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">Один безе без начинки содержит всего ~10-15 ккал. Но это обман — в нём много сахара, просто порция воздушная.</p>
+            </div>
+          </div>
+
+          <!-- Fact 3 -->
+          <div class="reveal delay-2 light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-orange-500" data-icon="lucide:cloud-rain"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Боится влаги</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">Безе гигроскопично — оно впитывает влагу из воздуха. В дождливую погоду безе становится липким и теряет хруст.</p>
+            </div>
+          </div>
+
+          <!-- Fact 4 -->
+          <div class="reveal delay-3 light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-purple-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-purple-500" data-icon="lucide:trophy"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Рекорд Гиннесса</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">Самое большое безе весило 111,5 кг и было приготовлено в Швейцарии в 2022 году — на родине десерта.</p>
+            </div>
+          </div>
+
+          <!-- Fact 5 -->
+          <div class="reveal delay-4 light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-rose-500" data-icon="lucide:heart-pulse"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Не аллергенно для многих</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">При непереносимости молочных продуктов, орехов и глютена — безе может стать одним из немногих безопасных десертов.</p>
+            </div>
+          </div>
+
+          <!-- Fact 6 -->
+          <div class="reveal delay-5 light-card rounded-2xl p-6 flex gap-5">
+            <div class="flex-shrink-0 w-12 h-12 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+              <span class="iconify text-xl text-amber-500" data-icon="lucide:palette"></span>
+            </div>
+            <div>
+              <h4 class="font-medium text-stone-900 mb-1">Любой цвет</h4>
+              <p class="text-sm text-stone-500 font-light leading-relaxed">Пищевые красители позволяют создать безе любого оттенка — от пастельного розового до глубокого фиолетового.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="py-24 px-6 bg-stone-900 rounded-t-[3rem]">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="text-center mb-16">
+        <p class="reveal text-xs font-bold uppercase tracking-[0.3em] text-stone-500 mb-4">Галерея</p>
+        <h2 class="reveal delay-1 font-serif text-4xl md:text-5xl font-normal leading-[0.85] tracking-tighter text-cream">
+          Красота в деталях
+        </h2>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div class="reveal img-zoom rounded-2xl md:col-span-2 md:row-span-2">
+          <img src="https://picsum.photos/seed/meringue-gallery-main/800/800.jpg" alt="Безе" class="w-full h-full object-cover aspect-square">
+        </div>
+        <div class="reveal delay-1 img-zoom rounded-2xl">
+          <img src="https://picsum.photos/seed/pink-meringue-tower/400/400.jpg" alt="Безе" class="w-full aspect-square object-cover">
+        </div>
+        <div class="reveal delay-2 img-zoom rounded-2xl">
+          <img src="https://picsum.photos/seed/mini-meringue-pastels/400/400.jpg" alt="Безе" class="w-full aspect-square object-cover">
+        </div>
+        <div class="reveal delay-3 img-zoom rounded-2xl">
+          <img src="https://picsum.photos/seed/meringue-kiss-white/400/400.jpg" alt="Безе" class="w-full aspect-square object-cover">
+        </div>
+        <div class="reveal delay-4 img-zoom rounded-2xl">
+          <img src="https://picsum.photos/seed/meringue-with-fruit/400/400.jpg" alt="Безе" class="w-full aspect-square object-cover">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Closing Section -->
+  <section class="relative py-32 px-6 bg-stone-900 rounded-b-[3rem] overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-savor/10 blur-[120px]"></div>
+
+    <div class="relative max-w-3xl mx-auto text-center">
+      <div class="reveal">
+        <p class="text-xs font-bold uppercase tracking-[0.3em] text-stone-500 mb-6">Приятного аппетита</p>
+      </div>
+      <h2 class="reveal delay-1 font-serif text-4xl md:text-6xl font-normal leading-[0.85] tracking-tighter text-cream mb-8">
+        Попробуйте создать<br>своё <em class="text-stone-500">идеальное</em> безе
+      </h2>
+      <p class="reveal delay-2 text-lg font-light text-stone-500 leading-relaxed mb-10 max-w-xl mx-auto">
+        Два ингредиента, немного терпения иWhole куча вдохновения — вот и весь секрет десерта, который покорил мир
+      </p>
+      <div class="reveal delay-3 flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#process" class="inline-flex items-center justify-center gap-2 bg-cream text-stone-900 text-sm font-bold uppercase tracking-wide px-8 py-4 rounded-full hover:scale-105 transition-transform duration-150">
+          Перечитать рецепт
+          <span class="iconify text-base" data-icon="lucide:arrow-up"></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 bg-stone-900 border-t border-white/5">
+    <div class="max-w-screen-xl mx-auto">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-3">
+          <span class="font-serif text-2xl text-cream">Безе<span class="text-stone-600">.</span></span>
+          <span class="text-xs text-stone-600">— статья-презентация</span>
+        </div>
+        <div class="elegant-divider w-full md:w-auto md:flex-1 max-w-xs">
+          <span class="iconify text-stone-600" data-icon="lucide:heart"></span>
+        </div>
+        <p class="text-xs text-stone-600">
+          Создано с любовью к кондитерскому искусству
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top button -->
+  <button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-stone-900 text-cream flex items-center justify-center shadow-2xl opacity-0 translate-y-4 pointer-events-none transition-all duration-500 hover:scale-110 z-50">
+    <span class="iconify text-lg" data-icon="lucide:arrow-up"></span>
+  </button>
+
+  <script>
+    // Reveal on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Mobile menu
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      if (menuOpen) {
+        mobileMenu.style.opacity = '1';
+        mobileMenu.style.transform = 'translateY(0)';
+        mobileMenu.style.pointerEvents = 'auto';
+      } else {
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.transform = 'translateY(-1rem)';
+        mobileMenu.style.pointerEvents = 'none';
+      }
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.opacity = '0';
+        mobileMenu.style.transform = 'translateY(-1rem)';
+        mobileMenu.style.pointerEvents = 'none';
+      });
+    });
+
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 600) {
+        backToTop.style.opacity = '1';
+        backToTop.style.transform = 'translateY(0)';
+        backToTop.style.pointerEvents = 'auto';
+      } else {
+        backToTop.style.opacity = '0';
+        backToTop.style.transform = 'translateY(1rem)';
+        backToTop.style.pointerEvents = 'none';
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Active nav link highlight
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navLinks.forEach(link => {
+        link.classList.remove('text-stone-900');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('text-stone-900');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
